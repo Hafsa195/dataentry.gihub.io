@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Order Status - Display</title>
+    <link rel="stylesheet" href="display.css">
+</head>
+<body>
+
+    <h2>Machine Order Status</h2>
+
+    <!-- Table to display data -->
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th colspan="2">Machine</th>
+                <th colspan="2">Machine</th>
+                <th colspan="2">Machine</th>
+                <th colspan="2">Machine</th>
+                <th colspan="2">Machine</th>
+            </tr>
+            <tr>
+                <th>Order</th>
+                <th>Status</th>
+                <th>Order</th>
+                <th>Status</th>
+                <th>Order</th>
+                <th>Status</th>
+                <th>Order</th>
+                <th>Status</th>
+                <th>Order</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data rows will be inserted here by JavaScript -->
+        </tbody>
+    </table>
+
+    <!-- Buttons for refresh, clear data, and go to entry page -->
+    <br>
+    <!--<button onclick="window.location.href='entry.html'">Enter New Data</button>
+    <button onclick="clearData()">Clear Data</button>-->
+
+    <button onclick="refreshData()">Refresh Data</button>
+
+    <script>
+        // Function to load data from localStorage and display in the table
+        function loadData() {
+            const tableBody = document.querySelector('#dataTable tbody');
+
+            // Clear any existing rows in case of refresh
+            tableBody.innerHTML = '';
+
+            // Retrieve data from localStorage
+            const machineData = JSON.parse(localStorage.getItem('machineData')) || [];
+
+            // Loop through each data entry and create a new row
+            machineData.forEach(entry => {
+                const newRow = document.createElement('tr');
+
+                newRow.innerHTML = `
+                    <td>${entry.machine1.order}</td>
+                    <td>${entry.machine1.status}</td>
+                    <td>${entry.machine2.order}</td>
+                    <td>${entry.machine2.status}</td>
+                    <td>${entry.machine3.order}</td>
+                    <td>${entry.machine3.status}</td>
+                    <td>${entry.machine4.order}</td>
+                    <td>${entry.machine4.status}</td>
+                    <td>${entry.machine5.order}</td>
+                    <td>${entry.machine5.status}</td>
+                `;
+
+                // Append the new row to the table body
+                tableBody.appendChild(newRow);
+            });
+
+            if (machineData.length === 0) {
+                alert('No data available. Please enter some data first.');
+            }
+        }
+
+        // Function to clear data from localStorage
+        function clearData() {
+            if (confirm('Are you sure you want to clear all data?')) {
+                localStorage.removeItem('machineData');
+                alert('Data cleared successfully.');
+                // Refresh the table to reflect cleared data
+                loadData();
+            }
+        }
+
+        // Function to refresh the data
+        function refreshData() {
+            loadData(); // Call loadData to reload the data from localStorage
+        }
+
+        // Call loadData when the page loads
+        window.onload = loadData;
+    </script>
+
+</body>
+</html>

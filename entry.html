@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Order Status - Data Entry</title>
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="entry.css">
+</head>
+<body>
+
+    <h2>Machine Order Status Entry</h2>
+
+    <!-- Dropdown to select an entry to edit -->
+    <label for="entrySelect">Select Entry to Edit (optional):</label>
+    <select id="entrySelect">
+        <option value="">-- Select Entry --</option>
+        <!-- Existing entries will be dynamically populated here -->
+    </select>
+
+    <!-- Form to enter or edit data -->
+    <form id="dataEntryForm">
+        <label for="order1">Machine 1 - Order:</label>
+        <input type="text" id="order1" required>
+        <label for="status1">Machine 1 - Status:</label>
+        <input type="text" id="status1" required>
+
+        <label for="order2">Machine 2 - Order:</label>
+        <input type="text" id="order2" required>
+        <label for="status2">Machine 2 - Status:</label>
+        <input type="text" id="status2" required>
+
+        <label for="order3">Machine 3 - Order:</label>
+        <input type="text" id="order3" required>
+        <label for="status3">Machine 3 - Status:</label>
+        <input type="text" id="status3" required>
+
+        <label for="order4">Machine 4 - Order:</label>
+        <input type="text" id="order4" required>
+        <label for="status4">Machine 4 - Status:</label>
+        <input type="text" id="status4" required>
+
+        <label for="order5">Machine 5 - Order:</label>
+        <input type="text" id="order5" required>
+        <label for="status5">Machine 5 - Status:</label>
+        <input type="text" id="status5" required>
+
+        <button type="submit">Save Data</button>
+    </form>
+
+    <!-- Button to go to the display page -->
+    <br>
+    <button onclick="window.location.href='display.html'">View Data</button>
+
+    <script>
+        let currentEditingIndex = null;  // Variable to store which entry is being edited
+
+        // Function to load existing data into the dropdown
+        function populateEntryDropdown() {
+            const entrySelect = document.getElementById('entrySelect');
+            const machineData = JSON.parse(localStorage.getItem('machineData')) || [];
+
+            // Clear previous options except the default one
+            entrySelect.innerHTML = '<option value="">-- Select Entry --</option>';
+
+            // Populate the dropdown with existing entries
+            machineData.forEach((entry, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `Entry ${index + 1}`;
+                entrySelect.appendChild(option);
+            });
+        }
+
+        // Function to load the selected entry into the form for editing
+        document.getElementById('entrySelect').addEventListener('change', function() {
+            const selectedIndex = this.value;
+            const machineData = JSON.parse(localStorage.getItem('machineData')) || [];
+
+            if (selectedIndex !== '') {
+                // Load the selected entry's data into the form fields
+                const entry = machineData[selectedIndex];
+
+                document.getElementById('order1').value = entry.machine1.order;
+                document.getElementById('status1').value = entry.machine1.status;
+                document.getElementById('order2').value = entry.machine2.order;
+                document.getElementById('status2').value = entry.machine2.status;
+                document.getElementById('order3').value = entry.machine3.order;
+                document.getElementById('status3').value = entry.machine3.status;
+                document.getElementById('order4').value = entry.machine4.order;
+                document.getElementById('status4').value = entry.machine4.status;
+                document.getElementById('order5').value = entry.machine5.order;
+                document.getElementById('status5').value = entry.machine5.status;
+
+                currentEditingIndex = selectedIndex;  // Store the index of the entry being edited
+            } else {
+                // Clear the form if no entry is selected
+                document.getElementById('dataEntryForm').reset();
+                currentEditingIndex = null;  // No entry is being edited
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('dataEntryForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Collect data from the form
+            const newEntry = {
+                machine1: { order: document.getElementById('order1').value, status: document.getElementById('status1').value },
+                machine2: { order: document.getElementById('order2').value, status: document.getElementById('status2').value },
+                machine3: { order: document.getElementById('order3').value, status: document.getElementById('status3').value },
+                machine4: { order: document.getElementById('order4').value, status: document.getElementById('status4').value },
+                machine5: { order: document.getElementById('order5').value, status: document.getElementById('status5').value }
+            };
+
+            // Retrieve existing data
+            let machineData = JSON.parse(localStorage.getItem('machineData')) || [];
+
+            if (currentEditingIndex !== null) {
+                // Update the existing entry
+                machineData[currentEditingIndex] = newEntry;
+                alert('Data updated successfully!');
+            } else {
+                // Add a new entry
+                machineData.push(newEntry);
+                alert('Data saved successfully!');
+            }
+
+            // Save the updated data back to localStorage
+            localStorage.setItem('machineData', JSON.stringify(machineData));
+
+            // Reset the form and clear editing state
+            document.getElementById('dataEntryForm').reset();
+            currentEditingIndex = null;
+            document.getElementById('entrySelect').value = '';  // Reset the dropdown
+        });
+
+        // Call populateEntryDropdown when the page loads
+        window.onload = populateEntryDropdown;
+    </script>
+
+</body>
+</html>
